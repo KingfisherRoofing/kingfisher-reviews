@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingfisher Roofing</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+    background: #ffffff;
+    color: #1a2332;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Translucent tree background */
+  .bg-tree {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .bg-tree img {
+    width: 110%;
+    min-height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+  }
+
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 24px 20px 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 32px 0 24px;
+  }
+  .logo-circle {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    overflow: hidden;
+    border: 3px solid #0fa5b8;
+    box-shadow: 0 4px 16px rgba(15, 165, 184, 0.2);
+    background: #fff;
+  }
+  .logo-circle img {
+    width: 140%;
+    height: 140%;
+    object-fit: cover;
+    object-position: 20% 40%;
+    margin-left: -10%;
+    margin-top: -5%;
+  }
+  .company-name {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #1a2332;
+  }
+  .company-name span { color: #0fa5b8; }
+  .tagline {
+    color: #7a8a9a;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    background: #f0f2f5;
+    border-radius: 14px;
+    padding: 4px;
+    margin-bottom: 28px;
+  }
+  .tab {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    border-radius: 11px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    color: #7a8a9a;
+    border: none;
+    background: transparent;
+  }
+  .tab.active {
+    background: linear-gradient(135deg, #0fa5b8, #12bdd2);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(15, 165, 184, 0.35);
+  }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* Review Page */
+  .review-intro {
+    text-align: center;
+    margin-bottom: 24px;
+    padding: 0 8px;
+  }
+  .review-intro h2 { font-size: 22px; margin-bottom: 8px; color: #1a2332; }
+  .review-intro p { color: #7a8a9a; font-size: 14px; line-height: 1.5; }
+
+  .review-btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: #f7f8fa;
+    border: 1px solid #e8ebef;
+    color: #1a2332;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 12px;
+    text-decoration: none;
+  }
+  .review-btn:hover {
+    background: #eef0f4;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  }
+  .review-btn .icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-right: 14px;
+    font-size: 20px;
+    flex-shrink: 0;
+    color: #fff;
+    font-weight: 700;
+  }
+  .review-btn .arrow { margin-left: auto; color: #bcc5cf; font-size: 18px; }
+  .review-btn .btn-sub { font-size: 12px; color: #7a8a9a; font-weight: 400; margin-top: 2px; }
+
+  .icon-google { background: linear-gradient(135deg, #4285f4, #34a853); }
+  .icon-facebook { background: linear-gradient(135deg, #1877f2, #0d5bbd); }
+  .icon-yelp { background: linear-gradient(135deg, #d32323, #af1d1d); }
+  .icon-thumbtack { background: linear-gradient(135deg, #009fd9, #0078a8); }
+  .icon-angi { background: linear-gradient(135deg, #ff6138, #e04520); }
+
+  .recommended-badge {
+    background: rgba(232, 132, 26, 0.12);
+    color: #e8841a;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-left: 10px;
+    letter-spacing: 0.3px;
+  }
+
+  /* Referral Page */
+  .referral-intro { text-align: center; margin-bottom: 24px; padding: 0 8px; }
+  .referral-intro h2 { font-size: 22px; margin-bottom: 8px; color: #1a2332; }
+  .referral-intro p { color: #7a8a9a; font-size: 14px; line-height: 1.5; }
+
+  .form-group { margin-bottom: 16px; }
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #7a8a9a;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid #dde1e7;
+    background: #f7f8fa;
+    color: #1a2332;
+    font-size: 16px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: #b0b8c4; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: #0fa5b8;
+    background: #fff;
+  }
+  .form-group select { color: #1a2332; }
+  .form-group select option { background: #fff; color: #1a2332; }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #0fa5b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 28px 0 14px;
+  }
+  .section-label:first-of-type { margin-top: 0; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #0fa5b8, #12bdd2);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    margin-top: 24px;
+    transition: all 0.2s;
+    box-shadow: 0 6px 20px rgba(15, 165, 184, 0.3);
+  }
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(15, 165, 184, 0.45);
+  }
+  .submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 48px 20px;
+  }
+  .success-msg .check {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+    box-shadow: 0 8px 24px rgba(46, 204, 113, 0.25);
+  }
+  .success-msg h2 { font-size: 22px; margin-bottom: 8px; color: #1a2332; }
+  .success-msg p { color: #7a8a9a; font-size: 14px; line-height: 1.5; }
+
+  .error-msg {
+    display: none;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid #e8ebef;
+    color: #b0b8c4;
+    font-size: 12px;
+  }
+  .footer a { color: #0fa5b8; text-decoration: none; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- Translucent tree background as img for better compatibility -->
+<div class="bg-tree">
+  <img src="tree-bg.png" alt="" loading="eager">
+</div>
+
+<div class="container">
+  <div class="header">
+    <div class="logo-circle">
+      <img src="logo.png" alt="Kingfisher Roofing">
+    </div>
+    <div class="company-name">Kingfisher <span>Roofing</span></div>
+    <div class="tagline">Quality You Can Trust</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('reviews')">⭐ Leave a Review</button>
+    <button class="tab" onclick="switchTab('referral')">🤝 Refer a Friend</button>
+  </div>
+
+  <!-- REVIEWS PAGE -->
+  <div id="reviews-page" class="page active">
+    <div class="review-intro">
+      <h2>How Did We Do?</h2>
+      <p>Your feedback helps our small business grow. Pick a platform and share your experience — it only takes a minute!</p>
+    </div>
+
+    <a href="https://search.google.com/local/reviews?placeid=ChIJb_JLXV3NRIYR4A-c8lkkGrg" target="_blank" class="review-btn">
+      <div class="icon icon-google">G</div>
+      <div>
+        Google Reviews
+        <span class="recommended-badge">MOST HELPFUL</span>
+        <div class="btn-sub">Helps us show up in local search</div>
+      </div>
+      <div class="arrow">›</div>
+    </a>
+
+    <a href="https://www.facebook.com/kingfisherroof/reviews" target="_blank" class="review-btn">
+      <div class="icon icon-facebook">f</div>
+      <div>
+        Facebook
+        <div class="btn-sub">Recommend us to your network</div>
+      </div>
+      <div class="arrow">›</div>
+    </a>
+
+    <a href="https://www.thumbtack.com/reviews/services/527012729470525446/write" target="_blank" class="review-btn">
+      <div class="icon icon-thumbtack">T</div>
+      <div>
+        Thumbtack
+        <div class="btn-sub">Help other homeowners find us</div>
+      </div>
+      <div class="arrow">›</div>
+    </a>
+
+    <a href="https://www.homeadvisor.com/review/94308820?hired=unknown&entry_point_id=33640456" target="_blank" class="review-btn">
+      <div class="icon icon-angi">A</div>
+      <div>
+        Angi
+        <div class="btn-sub">Share your project experience</div>
+      </div>
+      <div class="arrow">›</div>
+    </a>
+
+    <a href="https://www.yelp.com/writeareview/biz/eT-J-N6Z_0my2vPNUjmuXQ?return_url=%2Fbiz%2FeT-J-N6Z_0my2vPNUjmuXQ&review_origin=biz-details-war-button" target="_blank" class="review-btn">
+      <div class="icon icon-yelp">★</div>
+      <div>
+        Yelp
+        <div class="btn-sub">Rate and review our service</div>
+      </div>
+      <div class="arrow">›</div>
+    </a>
+  </div>
+
+  <!-- REFERRAL PAGE -->
+  <div id="referral-page" class="page">
+    <div id="referral-form-section">
+      <div class="referral-intro">
+        <h2>Refer Someone You Know</h2>
+        <p>Know someone who needs roofing work? Send them our way! Fill out the quick form below and we'll take it from there.</p>
+      </div>
+
+      <div class="section-label">Your Info (the referrer)</div>
+
+      <div class="form-group">
+        <label>Your Name *</label>
+        <input type="text" id="referrer-name" placeholder="John Smith">
+      </div>
+      <div class="form-group">
+        <label>Your Phone or Email *</label>
+        <input type="text" id="referrer-contact" placeholder="(555) 123-4567 or email">
+      </div>
+
+      <div class="section-label">Person You're Referring</div>
+
+      <div class="form-group">
+        <label>Their Name *</label>
+        <input type="text" id="ref-name" placeholder="Jane Doe">
+      </div>
+      <div class="form-group">
+        <label>Their Phone Number *</label>
+        <input type="tel" id="ref-phone" placeholder="(555) 987-6543">
+      </div>
+      <div class="form-group">
+        <label>Their Email *</label>
+        <input type="email" id="ref-email" placeholder="jane@email.com">
+      </div>
+      <div class="form-group">
+        <label>Service Needed</label>
+        <select id="ref-service">
+          <option value="">Select a service...</option>
+          <option>Roof Repair</option>
+          <option>Roof Replacement</option>
+          <option>Roof Inspection</option>
+          <option>Storm Damage</option>
+          <option>Gutter Work</option>
+          <option>Siding/Windows</option>
+          <option>Not Sure / Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Anything Else We Should Know? (optional)</label>
+        <textarea id="ref-notes" placeholder="E.g. best time to call, details about the issue..."></textarea>
+      </div>
+
+      <button class="submit-btn" id="submit-btn" onclick="submitReferral()">Submit Referral →</button>
+      <div class="error-msg" id="error-msg"></div>
+    </div>
+
+    <div id="referral-success" class="success-msg">
+      <div class="check">✓</div>
+      <h2>Referral Submitted!</h2>
+      <p>Thanks for thinking of us! We'll reach out to them shortly. We appreciate you spreading the word about Kingfisher Roofing.</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>© 2026 Kingfisher Roofing &nbsp;•&nbsp; <a href="tel:+15128317228">Call Us: (512) 831-7228</a></p>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// GOOGLE APPS SCRIPT URL — Replace this with your deployed URL
+// ============================================================
+const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  if (tab === 'reviews') {
+    document.querySelectorAll('.tab')[0].classList.add('active');
+    document.getElementById('reviews-page').classList.add('active');
+  } else {
+    document.querySelectorAll('.tab')[1].classList.add('active');
+    document.getElementById('referral-page').classList.add('active');
+  }
+}
+
+async function submitReferral() {
+  const btn = document.getElementById('submit-btn');
+  const errorEl = document.getElementById('error-msg');
+  errorEl.style.display = 'none';
+
+  const name = document.getElementById('referrer-name').value.trim();
+  const contact = document.getElementById('referrer-contact').value.trim();
+  const refName = document.getElementById('ref-name').value.trim();
+  const refPhone = document.getElementById('ref-phone').value.trim();
+  const refEmail = document.getElementById('ref-email').value.trim();
+
+  if (!name || !contact || !refName || !refPhone || !refEmail) {
+    errorEl.textContent = 'Please fill in all required fields (marked with *)';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  if (!refEmail.includes('@') || !refEmail.includes('.')) {
+    errorEl.textContent = 'Please enter a valid email address.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  // Disable button while submitting
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  const data = {
+    referrerName: name,
+    referrerContact: contact,
+    referredName: refName,
+    referredPhone: refPhone,
+    referredEmail: refEmail,
+    service: document.getElementById('ref-service').value,
+    notes: document.getElementById('ref-notes').value.trim(),
+    submittedAt: new Date().toLocaleString()
+  };
+
+  try {
+    // Send to Google Apps Script
+    const response = await fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    // no-cors means we can't read the response, but if it didn't throw, it sent
+    document.getElementById('referral-form-section').style.display = 'none';
+    document.getElementById('referral-success').style.display = 'block';
+
+  } catch (err) {
+    errorEl.textContent = 'Something went wrong. Please call us at (512) 831-7228 instead.';
+    errorEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Submit Referral →';
+  }
+}
+</script>
+</body>
+</html>
